@@ -1,0 +1,35 @@
+name: publish
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment: packagist
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          tools: composer
+      - run: composer validate --strict
+      - run: php tests/conformance.php
+      - name: Require prior Packagist registration
+        run: curl --fail --silent --show-error https://repo.packagist.org/p2/customy/data-sdk.json >/dev/null
+      - name: Refresh Packagist from the immutable tag
+        run: |
+          curl --fail --silent --show-error \
+            --request POST \
+            --header "Authorization: Bearer ${{ secrets.PACKAGIST_USERNAME }}:${{ secrets.PACKAGIST_API_TOKEN }}" \
+            --header "Content-Type: application/json" \
+            --data '{"repository":"https://github.com/customyco/customy-data-php"}' \
+            https://packagist.org/api/update-package >/dev/null
