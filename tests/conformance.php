@@ -50,7 +50,7 @@ function check(bool $condition, string $label): void
     }
 }
 
-$conformancePath = getenv('CUSTOMY_DATA_CONFORMANCE_PATH') ?: __DIR__.'/../../sdk-data/conformance/customer-data-v1.json';
+$conformancePath = getenv('CUSTOMY_DATA_CONFORMANCE_PATH') ?: __DIR__.'/../conformance/customer-data-v1.json';
 $vectors = json_decode(file_get_contents($conformancePath), true, 512, JSON_THROW_ON_ERROR);
 check($vectors['contract'] === CustomyDataClient::CONFORMANCE_CONTRACT, 'contract');
 $statuses = $bodies = [];
