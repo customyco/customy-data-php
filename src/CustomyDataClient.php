@@ -6,7 +6,7 @@ namespace Customy\Data;
 
 final class CustomyDataClient
 {
-    public const VERSION = '0.1.0';
+    public const VERSION = '0.1.1';
     public const CONFORMANCE_CONTRACT = 'customy.customer-data-sdk.conformance.v1';
 
     private const EVENT_TYPES = ['track', 'identify', 'group', 'page', 'screen', 'alias'];
